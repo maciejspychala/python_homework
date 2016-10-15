@@ -12,6 +12,8 @@ with open(f, 'r') as data:
     r = csv.reader(data)
     my_list = list(r)
     l = len(my_list[1])
+    l2 = len(my_list) - 1
+    print(l2)
     a = []
     x = []
     for row in my_list[1::]:
@@ -28,6 +30,6 @@ ax2 = ax1.twiny()
 ax1.plot(x, a)
 formatter = tkr.FuncFormatter(kilo)
 ax1.xaxis.set_major_formatter(formatter)
-ax2.set_xlim(0, 200)
-ax2.set_xticks(range(201)[0::40])
+ax2.set_xlim(0, l2)
+ax2.set_xticks(range(l2 + 1)[0::(l2 / 5)])
 plt.show()
