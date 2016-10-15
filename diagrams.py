@@ -42,9 +42,11 @@ for i in range(5):
     x.append(x1)
     a.append(a1)
 
+plt.rcParams["figure.figsize"] = [6.7, 10]
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
 ax2 = ax1.twiny()
+fig.set_size_inches(10, 50)
 ax1.grid(True)
 ax1.set_xlim(0, 500000)
 for i in range(5):
