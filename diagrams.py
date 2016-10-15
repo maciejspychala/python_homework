@@ -1,5 +1,11 @@
 import matplotlib.pyplot as plt
+import matplotlib.ticker as tkr
 import csv
+
+
+def kilo(x, _):
+    return '%.0f' % (x / 1000)
+
 
 f = 'cel.csv'
 with open(f, 'r') as data:
@@ -16,6 +22,12 @@ with open(f, 'r') as data:
         a.append(my_sum / (l - 2))
 print(a)
 
-plt.plot(x, a)
-plt.ylabel('some numbers')
+fig = plt.figure()
+ax1 = fig.add_subplot(111)
+ax2 = ax1.twiny()
+ax1.plot(x, a)
+formatter = tkr.FuncFormatter(kilo)
+ax1.xaxis.set_major_formatter(formatter)
+ax2.set_xlim(0, 200)
+ax2.set_xticks(range(201)[0::40])
 plt.show()
