@@ -7,6 +7,8 @@ def kilo(x, _):
     return '%.0f' % (x / 1000)
 
 
+markers_list = ['o', 'v', '*']
+
 f = 'cel.csv'
 with open(f, 'r') as data:
     r = csv.reader(data)
@@ -27,7 +29,7 @@ print(a)
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
 ax2 = ax1.twiny()
-ax1.plot(x, a)
+ax1.plot(x, a, marker=markers_list[0], markevery=l2 / 8)
 formatter = tkr.FuncFormatter(kilo)
 ax1.xaxis.set_major_formatter(formatter)
 ax2.set_xlim(0, l2)
