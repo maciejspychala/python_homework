@@ -55,7 +55,7 @@ for i in range(5):
     a.append(a1)
     last.append(last1)
 
-plt.rcParams["figure.figsize"] = [6.7, 10]
+plt.rcParams["figure.figsize"] = [13.4, 10]
 fig = plt.figure()
 
 line_graph = fig.add_subplot(121)
@@ -85,4 +85,5 @@ box_graph.grid(True)
 box_graph.yaxis.set_major_formatter(tkr.FuncFormatter(percent))
 box_graph.set_ylim(0.60, 1)
 plt.xticks(rotation=20)
+plt.savefig('plot.pdf')
 plt.show()
