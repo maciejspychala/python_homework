@@ -4,6 +4,7 @@ import csv
 
 markers_list = ['o', 'v', 's', 'D', 'd']
 files_list = ['rsel.csv', 'cel-rs.csv', '2cel-rs.csv', 'cel.csv', '2cel.csv']
+names_list = ['1-Evol-RS', '1-Coev-RS', '2-Coev-RS', '1-Coev', '2-Coev']
 
 
 def calc_length():
@@ -63,6 +64,7 @@ line_graph_up = line_graph.twiny()
 for i in range(5):
     line_graph.plot(x[i], a[i], marker=markers_list[i], markevery=l2 / 8, label=files_list[i])
 
+line_graph.legend(loc='best')
 line_graph.grid(True)
 line_graph.set_xlim(0, 500000)
 line_graph.set_ylim(0.6, 1)
@@ -76,7 +78,7 @@ line_graph.set_ylabel('Odsetek wygranych gier [%]')
 line_graph_up.set_xlabel('Pokolenie')
 
 box_graph = fig.add_subplot(122)
-box_graph.boxplot(last, showmeans=True, notch=True)
+box_graph.boxplot(last, labels=names_list, showmeans=True, notch=True)
 box_graph.grid(True)
 box_graph.yaxis.set_major_formatter(tkr.FuncFormatter(percent))
 box_graph.set_ylim(0.60, 1)
