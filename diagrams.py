@@ -3,7 +3,7 @@ import matplotlib.ticker as tkr
 import csv
 
 markers_list = ['o', 'v', 's', 'D', 'd']
-files_list = ['cel.csv', '2cel.csv', 'cel-rs.csv', '2cel-rs.csv', 'rsel.csv']
+files_list = ['rsel.csv', 'cel-rs.csv', '2cel-rs.csv', 'cel.csv', '2cel.csv']
 
 
 def calc_length():
@@ -25,28 +25,38 @@ def load_data(f):
         my_list = list(r)
         a = []
         x = []
+        last = []
         for row in my_list[1::]:
             my_sum = 0
             x.append(row[1])
             for i in range(2, l):
                 my_sum += float(row[i])
             a.append(my_sum / (l - 2))
-    return a, x
+        row = my_list[-1]
+        row = row[2:]
+        for i in row:
+            last.append(float(i))
+    return a, x, last
 
 
 x = []
 a = []
+last = []
 l, l2 = calc_length()
+print (l)
 for i in range(5):
-    a1, x1 = load_data(files_list[i])
+    a1, x1, last1 = load_data(files_list[i])
     x.append(x1)
     a.append(a1)
+    print (last1)
+    last.append(last1)
 
 plt.rcParams["figure.figsize"] = [6.7, 10]
 fig = plt.figure()
-ax1 = fig.add_subplot(111)
+ax1 = fig.add_subplot(121)
 ax2 = ax1.twiny()
-fig.set_size_inches(10, 50)
+
+fig.set_size_inches(40, 50)
 ax1.grid(True)
 ax1.set_xlim(0, 500000)
 for i in range(5):
@@ -55,4 +65,10 @@ formatter = tkr.FuncFormatter(kilo)
 ax1.xaxis.set_major_formatter(formatter)
 ax2.set_xlim(0, l2)
 ax2.set_xticks(range(l2 + 1)[0::(l2 / 5)])
+
+bx1 = fig.add_subplot(122)
+bp = bx1.boxplot(last, 0, 'x', labels=files_list, showmeans=True)
+bx1.grid(True)
+plt.xticks(rotation=20)
+
 plt.show()
