@@ -62,7 +62,7 @@ line_graph = fig.add_subplot(121)
 line_graph_up = line_graph.twiny()
 
 for i in range(5):
-    line_graph.plot(x[i], a[i], marker=markers_list[i], markevery=l2 / 8, label=files_list[i])
+    line_graph.plot(x[i], a[i], marker=markers_list[i], markevery=l2 / 8, label=names_list[i])
 
 line_graph.legend(loc='best')
 line_graph.grid(True)
@@ -78,7 +78,9 @@ line_graph.set_ylabel('Odsetek wygranych gier [%]')
 line_graph_up.set_xlabel('Pokolenie')
 
 box_graph = fig.add_subplot(122)
-box_graph.boxplot(last, labels=names_list, showmeans=True, notch=True)
+meanpointprops = dict(marker='o', markerfacecolor='blue')
+a = box_graph.boxplot(last, labels=names_list, showmeans=True, notch=True, meanprops=meanpointprops)
+
 box_graph.grid(True)
 box_graph.yaxis.set_major_formatter(tkr.FuncFormatter(percent))
 box_graph.set_ylim(0.60, 1)
