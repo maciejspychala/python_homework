@@ -19,6 +19,10 @@ def kilo(x, _):
     return '%.0f' % (x / 1000)
 
 
+def percent(x, _):
+    return '%.0f' % (x * 100)
+
+
 def load_data(f):
     with open(f, 'r') as data:
         r = csv.reader(data)
@@ -43,32 +47,38 @@ x = []
 a = []
 last = []
 l, l2 = calc_length()
-print (l)
+
 for i in range(5):
     a1, x1, last1 = load_data(files_list[i])
     x.append(x1)
     a.append(a1)
-    print (last1)
     last.append(last1)
 
 plt.rcParams["figure.figsize"] = [6.7, 10]
 fig = plt.figure()
-ax1 = fig.add_subplot(121)
-ax2 = ax1.twiny()
 
-fig.set_size_inches(40, 50)
-ax1.grid(True)
-ax1.set_xlim(0, 500000)
+line_graph = fig.add_subplot(121)
+line_graph_up = line_graph.twiny()
+
 for i in range(5):
-    ax1.plot(x[i], a[i], marker=markers_list[i], markevery=l2 / 8)
-formatter = tkr.FuncFormatter(kilo)
-ax1.xaxis.set_major_formatter(formatter)
-ax2.set_xlim(0, l2)
-ax2.set_xticks(range(l2 + 1)[0::(l2 / 5)])
+    line_graph.plot(x[i], a[i], marker=markers_list[i], markevery=l2 / 8, label=files_list[i])
 
-bx1 = fig.add_subplot(122)
-bp = bx1.boxplot(last, 0, 'x', labels=files_list, showmeans=True)
-bx1.grid(True)
+line_graph.grid(True)
+line_graph.set_xlim(0, 500000)
+line_graph.set_ylim(0.6, 1)
+line_graph_up.set_xticks(range(l2 + 1)[0::(l2 / 5)])
+
+line_graph.xaxis.set_major_formatter(tkr.FuncFormatter(kilo))
+line_graph.yaxis.set_major_formatter(tkr.FuncFormatter(percent))
+
+line_graph.set_xlabel('Rozegranych gier ( x 1000)')
+line_graph.set_ylabel('Odsetek wygranych gier [%]')
+line_graph_up.set_xlabel('Pokolenie')
+
+box_graph = fig.add_subplot(122)
+box_graph.boxplot(last, showmeans=True, notch=True)
+box_graph.grid(True)
+box_graph.yaxis.set_major_formatter(tkr.FuncFormatter(percent))
+box_graph.set_ylim(0.60, 1)
 plt.xticks(rotation=20)
-
 plt.show()
