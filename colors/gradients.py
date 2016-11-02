@@ -41,9 +41,26 @@ def plot_color_gradients(gradients, names):
 
     fig.savefig('my-gradients.pdf')
 
-def hsv2rgb(h, s, v):
-    #TODO
-    return (h, s, v)
+def hsv2rgb(h, s, v): 
+    c = v*s
+    m = v-c
+    h2 = h*6
+    x = c*(1 - abs(h2 % 2 - 1))
+    if h2 < 1:
+        rgb = [c, x, 0]
+    elif h2 < 2:
+        rgb = [x, c, 0]
+    elif h2 < 3:
+        rgb = [0, c, x]
+    elif h2 < 4:
+        rgb = [0, x, c]
+    elif h2 < 5:
+        rgb = [x, 0, c]
+    elif h2 < 6:
+        rgb = [c, 0, x]
+    else:
+        rgb = [0, 0, 0]
+    return(rgb[0] + m, rgb[1] + m, rgb[2] + m)
 
 def gradient_rgb_bw(v):
     return (v, v, v)
@@ -85,23 +102,16 @@ def gradient_rgb_wb_custom(v):
 
 
 def gradient_hsv_bw(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
-
+    return hsv2rgb(0, 0, v)
 
 def gradient_hsv_gbr(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    return hsv2rgb(v*(2/3)+(1/3), 1, 1)
 
 def gradient_hsv_unknown(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
-
+    return hsv2rgb((1/3)-(v*(1/3)), 0.5, 1)
 
 def gradient_hsv_custom(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
-
+    return hsv2rgb(v, 1-v, 1)
 
 if __name__ == '__main__':
     def toname(g):
