@@ -6,7 +6,6 @@ matplotlib.use('Agg')                       # So that we can render files withou
 import matplotlib.pyplot as plt
 from matplotlib import rc
 import numpy as np
-%matplotlib inline 
 
 from matplotlib import colors
 
@@ -113,6 +112,49 @@ def gradient_hsv_unknown(v):
 def gradient_hsv_custom(v):
     return hsv2rgb(v, 1-v, 1)
 
+def display_map():
+    width, height, data = read_file()
+    minimum, maximum = map_min_and_max(data)
+    
+    colored_map = []
+    for row in data:
+        tab = []
+        for value in row:
+            tab.append(gradient_hsv_unknown((float(value)-minimum)/(maximum-minimum)))
+        colored_map.append(tab)
+        
+    plt.figure(figsize=(6,6))
+    plt.imshow(colored_map)
+    plt.savefig('map.pdf')  
+
+
+def map_min_and_max(data):
+    minimum = data[1][1]
+    maximum = data[1][1]
+    for row in data:
+        temp_min = min(row)
+        temp_max = max(row)
+
+        if temp_min < minimum:
+            minimum = temp_min
+        if temp_max > maximum:
+            maximum = temp_max
+    return minimum, maximum
+    
+    
+    
+def read_file():
+    data = []
+    with open('./big.dem') as f:
+        for x in f.readlines():
+            data.append(x.split())
+    width = data[0][0]
+    height = data[0][1]
+    data_float = []
+    for row in data:
+        data_float.append([float(i) for i in row])
+    return width, height, data_float[1:]
+
 if __name__ == '__main__':
     def toname(g):
         return g.__name__.replace('gradient_', '').replace('_', '-').upper()
@@ -121,3 +163,4 @@ if __name__ == '__main__':
                  gradient_hsv_bw, gradient_hsv_gbr, gradient_hsv_unknown, gradient_hsv_custom)
 
     plot_color_gradients(gradients, [toname(g) for g in gradients])
+    display_map()
