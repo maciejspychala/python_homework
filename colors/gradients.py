@@ -109,6 +109,9 @@ def gradient_hsv_gbr(v):
 def gradient_hsv_unknown(v):
     return hsv2rgb((1/3)-(v*(1/3)), 0.5, 1)
 
+def gradient_hsv_map(v, value):
+    return hsv2rgb((1/3)-(v*(1/3)), 0.8, value)
+
 def gradient_hsv_custom(v):
     return hsv2rgb(v, 1-v, 1)
 
@@ -119,8 +122,12 @@ def display_map():
     colored_map = []
     for row in data:
         tab = []
-        for value in row:
-            tab.append(gradient_hsv_unknown((float(value)-minimum)/(maximum-minimum)))
+        for i in range(len(row)):
+            shadow = 1
+            if i > 0:
+                if row[i-1]>row[i]+2:
+                    shadow = 0.7
+            tab.append(gradient_hsv_map((float(row[i]-minimum)/(maximum-minimum)), shadow))
         colored_map.append(tab)
         
     plt.figure(figsize=(6,6))
