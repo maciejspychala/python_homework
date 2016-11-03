@@ -121,6 +121,7 @@ def display_map():
     
     colored_map = []
     vectors = []
+    light = [1,-1,-1]
     for r in range(len(data)):
         color_tab = []
         vector_tab = []
@@ -131,14 +132,13 @@ def display_map():
                 vec1=[distance, row[i+1]-row[i], 0]
                 vec2=[0,data[r+1][i]-row[i],distance]
                 normal = np.cross(vec1, vec2)
-                light = [1,-1,-1]
                 cosang = np.dot(normal, light)
                 sinang = np.linalg.norm(np.cross(normal, light))
                 c = np.cos(np.arctan2(sinang, cosang))
                 c = (c+1)/2
             color_tab.append(gradient_hsv_map((float(row[i]-minimum)/(maximum-minimum)), c))
         colored_map.append(color_tab)
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(8, 8))
     plt.imshow(colored_map)
 
     plt.savefig('map.pdf')  
