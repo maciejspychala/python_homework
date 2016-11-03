@@ -110,28 +110,37 @@ def gradient_hsv_unknown(v):
     return hsv2rgb((1/3)-(v*(1/3)), 0.5, 1)
 
 def gradient_hsv_map(v, value):
-    return hsv2rgb((1/3)-(v*(1/3)), 0.8, value)
+    return hsv2rgb((1/3)-(v*(1/3)), 0.9, value)
 
 def gradient_hsv_custom(v):
     return hsv2rgb(v, 1-v, 1)
 
 def display_map():
-    width, height, data = read_file()
+    width, height, distance, data = read_file()
     minimum, maximum = map_min_and_max(data)
     
     colored_map = []
-    for row in data:
-        tab = []
+    vectors = []
+    for r in range(len(data)):
+        color_tab = []
+        vector_tab = []
+        row = data[r]
         for i in range(len(row)):
-            shadow = 1
-            if i > 0:
-                if row[i-1]>row[i]+2:
-                    shadow = 0.7
-            tab.append(gradient_hsv_map((float(row[i]-minimum)/(maximum-minimum)), shadow))
-        colored_map.append(tab)
-        
-    plt.figure(figsize=(6,6))
+            c = 0
+            if (r < (height - 1)) and (i < (width - 1)):
+                vec1=[distance, row[i+1]-row[i], 0]
+                vec2=[0,data[r+1][i]-row[i],distance]
+                normal = np.cross(vec1, vec2)
+                light = [1,-1,-1]
+                cosang = np.dot(normal, light)
+                sinang = np.linalg.norm(np.cross(normal, light))
+                c = np.cos(np.arctan2(sinang, cosang))
+                c = (c+1)/2
+            color_tab.append(gradient_hsv_map((float(row[i]-minimum)/(maximum-minimum)), c))
+        colored_map.append(color_tab)
+    plt.figure(figsize=(10, 10))
     plt.imshow(colored_map)
+
     plt.savefig('map.pdf')  
 
 
@@ -155,12 +164,15 @@ def read_file():
     with open('./big.dem') as f:
         for x in f.readlines():
             data.append(x.split())
-    width = data[0][0]
-    height = data[0][1]
+    width = float(data[0][0])
+    height = float(data[0][1])
+    distance = float(data[0][2])
+    distance = distance/100
+    distance = 1
     data_float = []
     for row in data:
         data_float.append([float(i) for i in row])
-    return width, height, data_float[1:]
+    return width, height, distance, data_float[1:]
 
 if __name__ == '__main__':
     def toname(g):
