@@ -49,6 +49,7 @@ def show_all():
         plot.imshow(color)
         for n, contour in enumerate(contours):
             plot.plot(contour[:,1],contour[:,0],linewidth=2)
+            plot.plot(np.mean(contour[:,1]), np.mean(contour[:,0]), 'ow')
         plt.axis('off')
 
     plt.savefig("allplanes.pdf")
