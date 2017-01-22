@@ -56,7 +56,7 @@ def get_fft_one_for_hz(w, freqs):
 
 
 start_freq = 60
-end_freq = 350
+end_freq = 650
 
 def smooth_array(array, margin, mode):
     array_smooth = []
@@ -66,36 +66,29 @@ def smooth_array(array, margin, mode):
         array_smooth.append(np.mean(x[margin-mode : margin+mode]))
     return np.array(array_smooth)
 
-def open_file(filename):
+def start(filename):
     data, frame_rate = get_data_and_framerate(filename)
     w, freqs = get_fft_and_freqs(data, frame_rate)
     w2 = get_fft_one_for_hz(w, freqs) 
-    fig = plt.figure()
-    graph = fig.add_subplot(311)
-    graph.plot(data)
-
-
-    graph = fig.add_subplot(312)
-    graph.bar(range(start_freq,end_freq), w2)
-
-    w_mode = smooth_array(w2, 3, 1)
-
-    graph = fig.add_subplot(313)
-    graph.bar(range(start_freq,end_freq), w_mode)
-    xx = 'K'
-    xd = np.argmax(w_mode)
-    print (xd + start_freq)
-    if (xd+start_freq) < 140:
-        xx = 'M'
-    if xx in filename:
-        print filename, 1
-    else:
-        print filename, 0
-    plt.show()
+    w_smooth = smooth_array(w2, 10, 2)
+    stamp = w_smooth[0:200]
+    index = 200
+    maks = sum(stamp)
+    for i in range(50, 250):
+        suma = 0
+        for j in range(200):
+            suma += abs(stamp[j] - w_smooth[j+i])
+        if suma < maks:
+            index = i
+            maks = suma
+    gender = 'K'
+    if (index) < 145:
+        gender = 'M'
+    print gender
 
 def main():
     filename = sys.argv[1]
-    open_file(filename)
+    start(filename)
 
 
 
