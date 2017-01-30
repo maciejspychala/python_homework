@@ -13,7 +13,7 @@ signal2 = lambda t : sin(2*pi*t) + cos(4*pi*t)
 def show_signal(signal):
     original = list(map(signal, linspace(0, T, N)))
     figure()
-    subplot(311)
+    subplot(411)
     plot(original)
 
     fft_table = np.fft.fft(original)
@@ -22,14 +22,15 @@ def show_signal(signal):
     fft_table = fft_table[0:len(fft_table)/2]
     freqs = freqs[0:len(freqs)/2]
 
-    subplot(312)
+    subplot(412)
     stem(freqs, fft_table)
 
-
-    subplot(313)
+    subplot(413)
     stem(freqs, abs(fft_table))
-    show()
 
+    subplot(414)
+    stem(freqs, arctan2(fft_table.imag, fft_table.real))
+    show()
 
 show_signal(signal1)
 show_signal(signal2)
